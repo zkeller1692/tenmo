@@ -8,7 +8,9 @@ import com.techelevator.tenmo.services.AccountServices;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 
+import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.Scanner;
 
 public class App {
 
@@ -106,7 +108,22 @@ public class App {
 
 	private void sendBucks() {
         User[] users = accountServices.listUsers();
-        System.out.println(users);
+        for(User user : users){
+            System.out.println(user.getUsername());
+        }
+
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("enter user to transfer from:");
+        String origin = userInput.nextLine();
+
+        System.out.println("Please enter user to send to:");
+        String destination = userInput.nextLine();
+
+        System.out.println("Please enter amount you would like to send:");
+        String amount = userInput.nextLine();
+        BigDecimal amountToDeposit = new BigDecimal(amount);
+
+        accountServices.transferBalance(amountToDeposit,origin,destination);
 	}
 
 	private void requestBucks() {

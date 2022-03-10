@@ -26,4 +26,15 @@ public BigDecimal getBalanceByUsername(String username){
     return balance;
 }
 
+public void transferBalance(BigDecimal transferAmt, String origUsername, String destinUsername){
+    String updateOrigin =   "UPDATE account SET balance = (balance - ?) " +
+                            "WHERE account.user_id = (SELECT user_id FROM tenmo_user WHERE username = ?);";
+    jdbcTemplate.update(updateOrigin, transferAmt, origUsername);
+
+    String updateDestin =   "UPDATE account SET balance = (balance + ?) " +
+                            "WHERE account.user_id = (SELECT user_id FROM tenmo_user WHERE username = ?); ";
+    jdbcTemplate.update(updateDestin, transferAmt, destinUsername);
+}
+
+
 }
