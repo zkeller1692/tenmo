@@ -107,7 +107,7 @@ public class App {
 	}
 
 	private void sendBucks() {
-        User[] users = accountServices.listUsers();
+        User[] users = accountServices.listUsers(currentUser);
         for(User user : users){
             System.out.println(user.getUsername());
         }
@@ -123,7 +123,7 @@ public class App {
         String amount = userInput.nextLine();
         BigDecimal amountToDeposit = new BigDecimal(amount);
 
-        accountServices.transferBalance(amountToDeposit,origin,destination);
+        accountServices.transferBalance(amountToDeposit,destination);
 	}
 
 	private void requestBucks() {
