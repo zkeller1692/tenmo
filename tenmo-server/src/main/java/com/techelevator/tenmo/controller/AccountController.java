@@ -4,12 +4,15 @@ import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.security.jwt.BalanceNotFoundException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
+@PreAuthorize("isAuthenticated()")
 @RestController
 public class AccountController {
 
@@ -26,13 +29,13 @@ public AccountController(UserDao userDao, AccountDao accountDao){
     return userDao.findAll();
 }
 
-@RequestMapping(path = "/users/{username}/balance", method = RequestMethod.GET)
-    public BigDecimal getBalance(@PathVariable String username){
-    return accountDao.getBalanceByUsername(username);
+@RequestMapping(path = "/users/balance", method = RequestMethod.GET)
+    public BigDecimal getBalance(Principal principal){
+    return accountDao.getBalanceByUsername(principal.getName());
 }
-@RequestMapping(path = "/users/{origUsername}/transfers/{transferAmount}/{destinUsername}", method = RequestMethod.PUT)
-    public void transferBalance(@PathVariable  String origUsername,@PathVariable BigDecimal transferAmount,
+@RequestMapping(path = "/users/transfers/{transferAmount}/{destinUsername}", method = RequestMethod.PUT)
+    public void transferBalance(Principal principal, @PathVariable BigDecimal transferAmount,
                                 @PathVariable String destinUsername) {
-    accountDao.transferBalance(transferAmount, origUsername,destinUsername);
+    accountDao.transferBalance(transferAmount, principal.getName() ,destinUsername);
 }
 }

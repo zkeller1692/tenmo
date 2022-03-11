@@ -2,10 +2,13 @@ package com.techelevator.tenmo.dao;
 
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 
+//@PreAuthorize("isAuthenticated()")
 @Component
 public class JdbcAccountDao implements AccountDao {
 
