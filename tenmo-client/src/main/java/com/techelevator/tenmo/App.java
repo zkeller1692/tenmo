@@ -93,8 +93,8 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-        String username = currentUser.getUser().getUsername();
-        System.out.println("Your current account balance is: $" + accountServices.getUserBalance(username));
+        //tring username = currentUser.getUser().getUsername();
+        System.out.println("Your current account balance is: $" + accountServices.getUserBalance(currentUser));
 	}
 
 	private void viewTransferHistory() {
@@ -112,9 +112,7 @@ public class App {
             System.out.println(user.getUsername());
         }
 
-        Scanner userInput = new Scanner(System.in);
-        System.out.println("enter user to transfer from:");
-        String origin = userInput.nextLine();
+       Scanner userInput = new Scanner(System.in);
 
         System.out.println("Please enter user to send to:");
         String destination = userInput.nextLine();
@@ -123,7 +121,7 @@ public class App {
         String amount = userInput.nextLine();
         BigDecimal amountToDeposit = new BigDecimal(amount);
 
-        accountServices.transferBalance(amountToDeposit,destination);
+        accountServices.transferBalance(currentUser, amountToDeposit,destination);
 	}
 
 	private void requestBucks() {

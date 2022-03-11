@@ -27,7 +27,8 @@ public class AccountServices {
     public User[] listUsers(AuthenticatedUser currentUser) {
         User[] users = null;
         try {
-            ResponseEntity<User[]> response = restTemplate.exchange(baseUrl + "users", HttpMethod.GET, makeAuthEntityForUser(currentUser), User[].class);
+            ResponseEntity<User[]> response = restTemplate.exchange(baseUrl + "users", HttpMethod.GET,
+                    makeAuthEntityForUser(currentUser), User[].class);
             users = response.getBody();
         } catch (RestClientResponseException e) {
             BasicLogger.log(e.getRawStatusCode() + " : " + e.getStatusText());
@@ -37,10 +38,12 @@ public class AccountServices {
         return users;
     }
 
-    public BigDecimal getUserBalance(String username) {
+    public BigDecimal getUserBalance(AuthenticatedUser currentUser) {
         BigDecimal balance = new BigDecimal("0");
         try {
-            balance = restTemplate.getForObject(baseUrl + "users/balance", BigDecimal.class);
+            ResponseEntity<BigDecimal> response = restTemplate.exchange(baseUrl + "users/balance",
+                    HttpMethod.GET,makeAuthEntityForUser(currentUser), BigDecimal.class);
+            balance = response.getBody();
         } catch (RestClientResponseException e) {
             BasicLogger.log(e.getRawStatusCode() + " : " + e.getStatusText());
         } catch (ResourceAccessException e) {
@@ -49,14 +52,11 @@ public class AccountServices {
         return balance;
     }
 
-    public boolean transferBalance(BigDecimal transferAmt, String destinUsername) {
-        Account origAccount = new Account();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Account> origEnt = new HttpEntity<>(origAccount, headers);
+    public boolean transferBalance(AuthenticatedUser currentUser, BigDecimal transferAmt, String destinUsername) {
         boolean success = false;
         try {
-            restTemplate.put(baseUrl + "users/transfers/" + transferAmt + "/" +  destinUsername, origEnt);
+           restTemplate.put(baseUrl + "users/transfers/" + transferAmt + "/" +
+                    destinUsername, makeAuthEntityForUser(currentUser));
             success = true;
         } catch (RestClientResponseException e) {
             BasicLogger.log(e.getRawStatusCode() + " : " + e.getStatusText());
