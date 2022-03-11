@@ -94,7 +94,7 @@ public class App {
 
 	private void viewCurrentBalance() {
         String username = currentUser.getUser().getUsername();
-        System.out.println(accountServices.getUserBalance(username));
+        System.out.println("Your current account balance is: $" + accountServices.getUserBalance(username));
 	}
 
 	private void viewTransferHistory() {

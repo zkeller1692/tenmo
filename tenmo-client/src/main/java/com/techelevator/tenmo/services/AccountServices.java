@@ -55,7 +55,7 @@ public class AccountServices {
         HttpEntity<Account> origEnt = new HttpEntity<>(origAccount, headers);
         boolean success = false;
         try {
-            restTemplate.put(baseUrl + "users/" + origUsername + "/transfers/" + transferAmt + destinUsername, origEnt);
+            restTemplate.put(baseUrl + "users/" + origUsername + "/transfers/" + transferAmt + "/" +  destinUsername, origEnt);
             success = true;
         } catch (RestClientResponseException e) {
             BasicLogger.log(e.getRawStatusCode() + " : " + e.getStatusText());
