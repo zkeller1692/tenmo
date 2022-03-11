@@ -54,17 +54,19 @@ public class AccountServices {
 
     public boolean transferBalance(AuthenticatedUser currentUser, BigDecimal transferAmt, String destinUsername) {
         boolean success = false;
-        try {
-           restTemplate.put(baseUrl + "users/transfers/" + transferAmt + "/" +
-                    destinUsername, makeAuthEntityForUser(currentUser));
-            success = true;
-        } catch (RestClientResponseException e) {
-            BasicLogger.log(e.getRawStatusCode() + " : " + e.getStatusText());
-        } catch (ResourceAccessException e) {
-            BasicLogger.log(e.getMessage());
+        if (!currentUser.getUser().getUsername().equals(destinUsername) && (transferAmt.compareTo(BigDecimal.ZERO) > 0)) {
+            try {
+                restTemplate.put(baseUrl + "users/transfers/" + transferAmt + "/" +
+                        destinUsername, makeAuthEntityForUser(currentUser));
+                success = true;
+            } catch (RestClientResponseException e) {
+                BasicLogger.log(e.getRawStatusCode() + " : " + e.getStatusText());
+            } catch (ResourceAccessException e) {
+                BasicLogger.log(e.getMessage());
+            }
         }
-        return success;
-    }
+            return success;
+        }
 
     private HttpEntity<Void> makeAuthEntityForUser(AuthenticatedUser authenticatedUser) {
         HttpHeaders headers = new HttpHeaders();

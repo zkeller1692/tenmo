@@ -108,11 +108,12 @@ public class App {
 
 	private void sendBucks() {
         User[] users = accountServices.listUsers(currentUser);
-        for(User user : users){
+        for (User user : users) {
+            if( !user.equals(currentUser.getUser()))
             System.out.println(user.getUsername());
         }
 
-       Scanner userInput = new Scanner(System.in);
+        Scanner userInput = new Scanner(System.in);
 
         System.out.println("Please enter user to send to:");
         String destination = userInput.nextLine();
@@ -121,8 +122,19 @@ public class App {
         String amount = userInput.nextLine();
         BigDecimal amountToDeposit = new BigDecimal(amount);
 
-        accountServices.transferBalance(currentUser, amountToDeposit,destination);
-	}
+        if (currentUser.getUser().getUsername().equals(destination)){
+            System.out.println("You can't send money to yourself!");
+       } else if (amountToDeposit.compareTo(BigDecimal.ZERO) <= 0){
+            System.out.println("You can't send negative or 0 amounts!");
+        } else if (accountServices.getUserBalance(currentUser).compareTo(BigDecimal.ZERO) < 0) {
+            System.out.println("You don't have any money!");
+        } else if (accountServices.getUserBalance(currentUser).compareTo(amountToDeposit) < 0) {
+            System.out.println("You don't have enough money!");
+        }
+         else{ accountServices.transferBalance(currentUser, amountToDeposit, destination);
+            System.out.println("Transaction Approved!");
+        }
+    }
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub

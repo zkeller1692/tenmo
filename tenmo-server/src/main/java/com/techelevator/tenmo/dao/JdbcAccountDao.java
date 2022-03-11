@@ -38,6 +38,4 @@ public class JdbcAccountDao implements AccountDao {
                 "WHERE account.user_id = (SELECT user_id FROM tenmo_user WHERE username = ?); ";
         jdbcTemplate.update(updateDestin, transferAmt, destinUsername);
     }
-
-
 }
