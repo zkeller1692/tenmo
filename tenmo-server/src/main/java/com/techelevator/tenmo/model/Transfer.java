@@ -35,12 +35,18 @@ public class Transfer {
     public void setTransferAmount(BigDecimal transferAmount) {
         this.transferAmount = transferAmount;
     }
+    public Long getTransferStatusId() {
+        return transferStatusId;
+    }
+    public void setTransferStatusId(Long transferStatusId) {
+        this.transferStatusId = transferStatusId;
+    }
 
     private Long id;
     private Long transferTypeId;
     private Long accountFromId;
     private Long accountToId;
     private BigDecimal transferAmount;
-
+    private Long transferStatusId;
 
 }
