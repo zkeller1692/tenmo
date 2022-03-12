@@ -1,11 +1,9 @@
 package com.techelevator.tenmo.services;
 
 
-import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.util.BasicLogger;
-import io.cucumber.java.bs.A;
 import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -73,4 +71,5 @@ public class AccountServices {
         headers.setBearerAuth(authenticatedUser.getToken());
         return new HttpEntity<>(headers);
     }
+
 }
