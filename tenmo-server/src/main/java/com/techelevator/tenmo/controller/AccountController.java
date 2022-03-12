@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDao;
+import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.security.jwt.BalanceNotFoundException;
@@ -18,10 +19,12 @@ public class AccountController {
 
 public UserDao userDao;
 public AccountDao accountDao;
+public TransferDao transferDao;
 
-public AccountController(UserDao userDao, AccountDao accountDao){
+public AccountController(UserDao userDao, AccountDao accountDao, TransferDao transferDao){
     this.userDao = userDao;
     this.accountDao = accountDao;
+    this.transferDao = transferDao;
 }
 
 @RequestMapping(path = "/users", method = RequestMethod.GET)
@@ -37,5 +40,6 @@ public AccountController(UserDao userDao, AccountDao accountDao){
     public void transferBalance(Principal principal, @PathVariable BigDecimal transferAmount,
                                 @PathVariable String destinUsername) {
     accountDao.transferBalance(transferAmount, principal.getName() ,destinUsername);
+    transferDao.addTransfer(destinUsername, principal.getName(), transferAmount);
 }
 }
