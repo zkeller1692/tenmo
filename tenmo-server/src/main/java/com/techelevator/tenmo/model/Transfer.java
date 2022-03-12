@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class Transfer {
 
-    
+
     public Long getId() {
         return id;
     }
