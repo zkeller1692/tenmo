@@ -34,6 +34,14 @@ public class jdbcTransferDao implements TransferDao{
     }
 
     @Override
+    public void addTransfer(Long origUserId, Long destinationUserId, BigDecimal transferAmt) {
+        String sql = "INSERT INTO transfer" +
+                " (transfer_type_id, transfer_status_id, account_from, account_to, amount)" +
+                " VALUES (2, 2, ?, ?);";
+        jdbcTemplate.update(sql, origUserId, destinationUserId, transferAmt);
+    }
+
+    @Override
     public void addTransfer(String origUsername, String destinUsername, BigDecimal transferAmt){
         String sql = "INSERT INTO transfer" +
                 " (transfer_type_id, transfer_status_id, account_from, account_to, amount)" +

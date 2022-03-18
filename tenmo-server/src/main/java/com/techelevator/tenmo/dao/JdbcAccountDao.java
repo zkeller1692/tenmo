@@ -29,6 +29,24 @@ public class JdbcAccountDao implements AccountDao {
         return balance;
     }
 
+    public BigDecimal getBalanceById(Long id){
+        String sql = "SELECT balance " +
+                "FROM account " +
+                "WHERE user_id = ?;";
+        BigDecimal balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, id);
+        return balance;
+    }
+
+    public void transferBalance(BigDecimal transferAmt, Long sourceUserId, Long destinUserId) {
+        String updateOrigin = "UPDATE account SET balance = (balance - ?) " +
+                "WHERE account.user_id = ?;";
+        jdbcTemplate.update(updateOrigin, transferAmt, sourceUserId);
+
+        String updateDestin = "UPDATE account SET balance = (balance + ?) " +
+                "WHERE account.user_id = ?;";
+        jdbcTemplate.update(updateDestin, transferAmt, destinUserId);
+    }
+
     public void transferBalance(BigDecimal transferAmt, String origUsername, String destinUsername) {
         String updateOrigin = "UPDATE account SET balance = (balance - ?) " +
                 "WHERE account.user_id = (SELECT user_id FROM tenmo_user WHERE username = ?);";

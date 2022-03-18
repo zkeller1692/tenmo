@@ -9,6 +9,7 @@ public interface TransferDao {
 
     Transfer getTransfer(Long transferId);
 
+    void addTransfer(Long origUserId, Long destinationUserId, BigDecimal transferAmt);
     void addTransfer(String origUsername, String destinUsername, BigDecimal transferAmt);
 
     List<Transfer> listTransfersByUsername(String username);

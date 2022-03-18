@@ -4,8 +4,11 @@ import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferRequest;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.security.jwt.BalanceNotFoundException;
+import com.techelevator.tenmo.services.AccountService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,14 +21,16 @@ import java.util.List;
 @RestController
 public class AccountController {
 
-    public UserDao userDao;
-    public AccountDao accountDao;
-    public TransferDao transferDao;
+    private final UserDao userDao;
+    private final AccountDao accountDao;
+    private final TransferDao transferDao;
+    private final AccountService accountService;
 
-    public AccountController(UserDao userDao, AccountDao accountDao, TransferDao transferDao) {
+    public AccountController(UserDao userDao, AccountDao accountDao, TransferDao transferDao, AccountService service) {
         this.userDao = userDao;
         this.accountDao = accountDao;
         this.transferDao = transferDao;
+        accountService = service;
     }
 
     @RequestMapping(path = "/users", method = RequestMethod.GET)
@@ -38,11 +43,18 @@ public class AccountController {
         return accountDao.getBalanceByUsername(principal.getName());
     }
 
-    @RequestMapping(path = "/users/transfers/{transferAmount}/{destinUsername}", method = RequestMethod.PUT)
-    public void transferBalance(Principal principal, @PathVariable BigDecimal transferAmount,
-                                @PathVariable String destinUsername) {
-        accountDao.transferBalance(transferAmount, principal.getName(), destinUsername);
-        transferDao.addTransfer(principal.getName(), destinUsername, transferAmount);
+//    @RequestMapping(path = "/users/transfers/{transferAmount}/{destinUsername}", method = RequestMethod.PUT)
+//    public void transferBalance(Principal principal, @PathVariable BigDecimal transferAmount,
+//                                @PathVariable String destinUsername) {
+//        accountDao.transferBalance(transferAmount, principal.getName(), destinUsername);
+//         transferDao.addTransfer(principal.getName(), destinUsername, transferAmount);
+//    }
+
+    @ResponseStatus(code = HttpStatus.CREATED)
+    @RequestMapping(path = "/transfers",method = RequestMethod.POST)
+    public void transferMoney(Principal principal, @RequestBody TransferRequest request){
+        User user = userDao.findByUsername(principal.getName());
+       accountService.transferFunds(user.getId(), request.destination, request.amount);
     }
 
     @RequestMapping(path = "/users/transfers/{transferId}", method = RequestMethod.GET)
